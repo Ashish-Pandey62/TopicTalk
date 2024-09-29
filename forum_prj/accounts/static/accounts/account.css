@@ -1,0 +1,17 @@
+body {
+  background-image: url(../images/bg.png);
+}
+
+.logo {
+  font-family: 'Peralta', cursive;
+}
+
+body .logo a {
+  color: rgba(0,0,0,.9);
+}
+
+
+.logo a:hover,
+.logo a:active {
+  text-decoration: none;
+}

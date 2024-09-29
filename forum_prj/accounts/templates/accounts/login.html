@@ -1,0 +1,19 @@
+{% extends 'accounts/base_accounts.html' %}
+
+{% block form_title %}
+  Log in
+{% endblock %}
+
+{% block submit_text %}
+  Log in
+{% endblock %}
+
+{% block footer_text %}
+  New to TopicTalks? <a href="{% url 'signup' %}">Sign up</a>
+{% endblock %}
+
+{% block extra_links %}
+  <small>
+    <a href="#" class="text-muted">Forgot your password?</a>
+  </small>
+{% endblock %}
