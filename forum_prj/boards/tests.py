@@ -85,17 +85,17 @@ class NewTopicTests(TestCase):
         response = self.client.get(url)
         self.assertContains(response, 'csrfmiddlewaretoken')
 
-def test_new_topic_valid_post_data(self):
-    self.client.login(username='testuser', password='password') 
-    url = reverse('new_topic', kwargs={'pk': self.board.pk})
-    data = {
-        'subject': 'Test title',
-        'message': 'Lorem ipsum dolor sit amet'
-    }
-    response = self.client.post(url, data)
-    self.assertRedirects(response, reverse('board_topics', kwargs={'pk': self.board.pk}))  # Check for redirect
-    self.assertTrue(Topic.objects.exists())
-    self.assertTrue(Post.objects.exists())
+    def test_new_topic_valid_post_data(self):
+        self.client.login(username='testuser', password='password') 
+        url = reverse('new_topic', kwargs={'pk': self.board.pk})
+        data = {
+            'subject': 'Test title',
+            'message': 'Lorem ipsum dolor sit amet'
+        }
+        response = self.client.post(url, data)
+        self.assertRedirects(response, reverse('board_topics', kwargs={'pk': self.board.pk}))  # Check for redirect
+        self.assertTrue(Topic.objects.exists())
+        self.assertTrue(Post.objects.exists())
 
 
     def test_new_topic_invalid_post_data(self):
@@ -121,3 +121,20 @@ def test_new_topic_valid_post_data(self):
         self.assertEquals(response.status_code, 200)
         self.assertFalse(Topic.objects.exists())
         self.assertFalse(Post.objects.exists())
+        
+    def test_contains_form(self):  # <- new test
+        url = reverse('new_topic', kwargs={'pk': 1})
+        response = self.client.get(url)
+        form = response.context.get('form')
+        self.assertIsInstance(form, NewTopicForm)
+
+    def test_new_topic_invalid_post_data(self):  # <- updated this one
+        '''
+        Invalid post data should not redirect
+        The expected behavior is to show the form again with validation errors
+        '''
+        url = reverse('new_topic', kwargs={'pk': 1})
+        response = self.client.post(url, {})
+        form = response.context.get('form')
+        self.assertEquals(response.status_code, 200)
+        self.assertTrue(form.errors)
