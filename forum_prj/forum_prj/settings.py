@@ -28,12 +28,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "widget_tweaks",
-<<<<<<< HEAD
     "accounts",
 
-=======
->>>>>>> 9b85cfb70db392067d7a351282da1b619490406d
-    
+
 ]
 
 MIDDLEWARE = [
@@ -123,3 +120,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 LOGOUT_REDIRECT_URL = 'home'
 LOGIN_REDIRECT_URL = 'home'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
