@@ -30,3 +30,7 @@ class BoardTopicsTests(TestCase):
         response = self.client.get(board_topics_url)
         self.assertContains(response, 'href="{0}"'.format(homepage_url))
         self.assertContains(response, 'href="{0}"'.format(new_topic_url))
+        
+    def test_board_topics_url_resolves_board_topics_view(self):
+            view = resolve('/boards/1/')
+            self.assertEquals(view.func.view_class, TopicListView)
