@@ -1,25 +1,23 @@
-from django.shortcuts import render, get_object_or_404,redirect
-from .models import Board,Topic,Post
-from django.http import Http404
+from django.shortcuts import render, get_object_or_404, redirect
+from .models import Board, Topic, Post
 from django.contrib.auth.models import User
-from .forms import NewTopicForm,PostForm
+from .forms import NewTopicForm, PostForm
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
-from django.views.generic import UpdateView
 from django.utils import timezone
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView
+from django.views.generic import ListView, UpdateView
+from django.urls import reverse_lazy
 
 
-
-
-
-
+# View for listing all boards
 class BoardListView(ListView):
     model = Board
     context_object_name = 'boards'
     template_name = 'boards/home.html'
 
+
+# View for listing all topics in a board, with pagination
 class TopicListView(ListView):
     model = Topic
     context_object_name = 'topics'
@@ -36,6 +34,7 @@ class TopicListView(ListView):
         return queryset
 
 
+# View for creating a new topic in a board
 @login_required
 def new_topic(request, pk):
     board = get_object_or_404(Board, pk=pk)
@@ -44,28 +43,36 @@ def new_topic(request, pk):
         if form.is_valid():
             topic = form.save(commit=False)
             topic.board = board
-            topic.starter = request.user 
+            topic.starter = request.user
             topic.save()
+
+            # Automatically create the first post for the topic
             Post.objects.create(
                 message=form.cleaned_data.get('message'),
                 topic=topic,
-                created_by=request.user  
+                created_by=request.user
             )
-            return redirect('topic_posts', pk=pk, topic_pk=topic.pk)
+
+            return redirect('topic_posts', pk=pk, topic_pk=topic.pk)  # Ensure this URL name exists in your urls.py
     else:
         form = NewTopicForm()
     return render(request, 'boards/new_topic.html', {'board': board, 'form': form})
 
 
+# View for listing posts within a topic, with pagination
 class PostListView(ListView):
     model = Post
     context_object_name = 'posts'
     template_name = 'boards/topic_posts.html'
-    paginate_by = 2
+    paginate_by = 20
 
     def get_context_data(self, **kwargs):
-        self.topic.views += 1
-        self.topic.save()
+        session_key = 'viewed_topic_{}'.format(self.topic.pk)
+        if not self.request.session.get(session_key, False):
+            self.topic.views += 1
+            self.topic.save()
+            self.request.session[session_key] = True
+
         kwargs['topic'] = self.topic
         return super().get_context_data(**kwargs)
 
@@ -75,6 +82,7 @@ class PostListView(ListView):
         return queryset
 
 
+# View for replying to a topic
 @login_required
 def reply_topic(request, pk, topic_pk):
     topic = get_object_or_404(Topic, board__pk=pk, pk=topic_pk)
@@ -85,17 +93,22 @@ def reply_topic(request, pk, topic_pk):
             post.topic = topic
             post.created_by = request.user
             post.save()
+
+            topic.last_updated = timezone.now()
+            topic.save()
+
             return redirect('topic_posts', pk=pk, topic_pk=topic_pk)
     else:
         form = PostForm()
     return render(request, 'boards/reply_topic.html', {'topic': topic, 'form': form})
 
 
+# View for updating/editing a post
 @method_decorator(login_required, name='dispatch')
 class PostUpdateView(UpdateView):
     model = Post
-    fields = ('message', )
-    template_name = 'edit_post.html'
+    fields = ('message',)
+    template_name = 'boards/edit_post.html'
     pk_url_kwarg = 'post_pk'
     context_object_name = 'post'
 
