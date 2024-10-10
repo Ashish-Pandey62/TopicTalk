@@ -10,14 +10,12 @@ from django.views.generic import ListView, UpdateView
 from django.urls import reverse_lazy
 
 
-# View for listing all boards
 class BoardListView(ListView):
     model = Board
     context_object_name = 'boards'
     template_name = 'boards/home.html'
 
 
-# View for listing all topics in a board, with pagination
 class TopicListView(ListView):
     model = Topic
     context_object_name = 'topics'
@@ -122,3 +120,16 @@ class PostUpdateView(UpdateView):
         post.updated_at = timezone.now()
         post.save()
         return redirect('topic_posts', pk=post.topic.board.pk, topic_pk=post.topic.pk)
+
+
+from django. contrib.auth.signals import user_logged_in
+from django.contrib.auth.models import User
+from django.dispatch import receiver
+from django.core.cache import cache
+
+@receiver (user_logged_in, sender=User)
+def login_success (sender, request, user,**kwargs) :
+    ct = cache-get ('count', 0, version=user.pk)
+    newcount = ct + 1
+    cache.set( 'count', newcount, 60*60*24, version=user.pk)
+    print(user.pk)

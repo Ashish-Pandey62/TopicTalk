@@ -3,24 +3,107 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>{% block title %}TopicTalk{% endblock %}</title>
+    
+    <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap"
       rel="stylesheet"
     />
+    
+    <!-- Bootstrap CSS -->
     <link
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
     />
+    
+    <!-- Custom CSS -->
     {% block stylesheet %}
     <link rel="stylesheet" href="{% static 'app.css' %}">
+    <style>
+      body {
+        font-family: 'Oswald', sans-serif;
+        background-color: #f8f9fa;
+      }
+      
+      .navbar-brand {
+        font-weight: 700;
+        font-size: 1.8rem;
+      }
+      
+      .navbar-nav .nav-link {
+        font-size: 1.2rem;
+        transition: color 0.3s ease;
+      }
+      
+      .navbar-nav .nav-link:hover {
+        color: #f39c12 !important;
+      }
+      
+      .breadcrumb {
+        background-color: #f8f9fa;
+        border-radius: 5px;
+        padding: 10px;
+        font-size: 1rem;
+      }
+
+      .breadcrumb a {
+        color: #3498db;
+        text-decoration: none;
+      }
+
+      .breadcrumb a:hover {
+        text-decoration: underline;
+      }
+
+      /* Style for main content */
+      .container {
+        margin-top: 30px;
+      }
+
+      /* Footer styling */
+      footer {
+        background-color: #343a40;
+        color: white;
+        padding: 20px;
+        text-align: center;
+        position: relative;
+        bottom: 0;
+        width: 100%;
+      }
+      
+      footer a {
+        color: #f39c12;
+        margin: 0 10px;
+        font-size: 1.2rem;
+      }
+
+      footer a:hover {
+        color: #ffffff;
+        text-decoration: none;
+      }
+
+      /* Button hover effects */
+      .dropdown-menu a {
+        transition: background-color 0.3s ease;
+      }
+
+      .dropdown-menu a:hover {
+        background-color: #f39c12;
+        color: white;
+      }
+      
+    </style>
     {% endblock %}
   </head>
 
   <body>
   {% block body %}
+  
+  <!-- Navbar -->
   <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
     <div class="container">
       <a class="navbar-brand" href="{% url 'home' %}">TopicTalks</a>
@@ -54,20 +137,36 @@
     </div>
   </nav>
 
+  <!-- Main content -->
   <div class="container">
     <ol class="breadcrumb my-4">
       {% block breadcrumb %}
+      <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+      <li class="breadcrumb-item active" aria-current="page">Discussion</li>
       {% endblock %}
     </ol>
-    {% block content %}
-    {% endblock %}
+
+    <div class="row">
+      <div class="col-md-12">
+        {% block content %}
+        {% endblock %}
+      </div>
+    </div>
   </div>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2024 TopicTalks - All Rights Reserved</p>
+    <a href="#">Facebook</a>
+    <a href="#">Twitter</a>
+    <a href="#">LinkedIn</a>
+  </footer>
+
   {% endblock body %}
   
+  <!-- JavaScript -->
   <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.5/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"></script>
   </body>
 </html>
-
-<div>z</div>

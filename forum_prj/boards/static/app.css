@@ -1,3 +1,31 @@
 .navbar-brand {
-  font-family: "Peralta", cursive;
+    font-family: "Peralta", cursive;
+    color: #f8f9fa; /* Ensure brand text is visible against dark background */
+}
+
+body {
+    background-image: url("{% static 'images/bg.jpg' %}");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+.container {
+    background-color: rgba(255, 255, 255, 0.9); /* Adds a slight opacity to make content readable */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-top: 20px;
+}
+
+/* Adjusted styles for navbar links */
+.navbar-nav .nav-link {
+    color: #f8f9fa; /* Ensuring text is visible */
+}
+
+.navbar-nav .nav-link:hover {
+    color: #f39c12; /* Hover color */
 }
